@@ -15,7 +15,8 @@ import { createUser } from '../features/users/usersSlice';
 export default function CreateUserScreen({ navigation }) {
   const dispatch = useDispatch();
   const { status } = useSelector((state) => state.users);
-  const [username, setUsername] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [role, setRole] = useState('');
 
@@ -23,7 +24,7 @@ export default function CreateUserScreen({ navigation }) {
 
   const handleCreate = async () => {
     // Validación
-    if (!username.trim() || !email.trim() || !role.trim()) {
+    if (!firstName.trim() || !lastName.trim() || !email.trim() || !role.trim()) {
       Alert.alert('Error', 'Todos los campos son obligatorios');
       return;
     }
@@ -31,7 +32,8 @@ export default function CreateUserScreen({ navigation }) {
     try {
       await dispatch(
         createUser({
-          username: username.trim(),
+          first_name: firstName.trim(),
+          last_name: lastName.trim(),
           email: email.trim(),
           role: role.trim(),
         })
@@ -49,9 +51,18 @@ export default function CreateUserScreen({ navigation }) {
         <Text style={styles.label}>Nombre *</Text>
         <TextInput
           style={styles.input}
-          placeholder="Ingresa el nombre completo"
-          value={username}
-          onChangeText={setUsername}
+          placeholder="Ingresa el nombre"
+          value={firstName}
+          onChangeText={setFirstName}
+          editable={!isLoading}
+        />
+
+        <Text style={styles.label}>Apellido *</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Ingresa el apellido"
+          value={lastName}
+          onChangeText={setLastName}
           editable={!isLoading}
         />
 

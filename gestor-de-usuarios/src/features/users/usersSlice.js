@@ -37,40 +37,37 @@ export const fetchUsers = createAsyncThunk(
 export const createUser = createAsyncThunk(
   'users/createUser',
   async (newUser) => {
-    try {
-      const response = await fetch(
-        'https://reqres.in/api/register',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-api-key': API_KEY,
-          },
-          body: JSON.stringify({
-            username: newUser.username,
-            email: newUser.email,
-          }),
-        }
-      );
+    const response = await fetch(
+      'https://reqres.in/api/users',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': API_KEY,
+        },
+        body: JSON.stringify({
+          first_name: newUser.first_name,
+          last_name: newUser.last_name,
+          email: newUser.email,
+          role: newUser.role,
+        }),
+      }
+    );
 
-      const data = await response.json();
-      return {
-        id: data.id || Date.now(),
-        email: newUser.email,
-        first_name: newUser.username.split(' ')[0] || newUser.username,
-        last_name: newUser.username.split(' ')[1] || '',
-        avatar: getRandomAvatar(),
-      };
-    } catch (error) {
-      // Mock: retornar usuario creado porque el endpoint no funciona
-      return {
-        id: Date.now(),
-        email: newUser.email,
-        first_name: newUser.username.split(' ')[0] || newUser.username,
-        last_name: newUser.username.split(' ')[1] || '',
-        avatar: getRandomAvatar(),
-      };
+    if (!response.ok) {
+      throw new Error('Error al crear usuario');
     }
+
+    const data = await response.json();
+
+    return {
+      id: data.id || Date.now(),
+      email: newUser.email,
+      first_name: newUser.first_name,
+      last_name: newUser.last_name,
+      avatar: getRandomAvatar(),
+      role: newUser.role,
+    };
   }
 );
 
